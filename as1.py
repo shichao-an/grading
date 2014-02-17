@@ -14,6 +14,7 @@ from utils import get_netid_from_dirname, build_students, print_results
 ASSIGNMENT_NAME = '../Hello World!'  # Directory name
 GRADES_CSV = 'grades.csv'
 STUDENTS = {}
+SCRIPTS = []  # Scripts to check
 FULL_MARK = 10
 _d = os.path.join(os.path.dirname(__file__), ASSIGNMENT_NAME)
 target = os.path.abspath(_d)
@@ -44,14 +45,13 @@ class TestAssignment(unittest.TestCase):
                     try:
                         _output = subprocess.check_output(['python3', script])
                         output = _output.decode('utf-8')
-                        try:
-                            assert 'hello' in str.lower(output)
-                            assert 'world' in str.lower(output)
-                            self.students[netid] = FULL_MARK
-                        except AssertionError:
-                            print(output)
-                    except subprocess.CalledProcessError:
-                        pass
+                        assert 'hello' in str.lower(output)
+                        assert 'world' in str.lower(output)
+                        self.students[netid] = FULL_MARK
+                    except Exception as e:
+                        SCRIPTS.append(script)
+                        print(netid)
+                        print(e)
 
     def tearDown(self):
         global STUDENTS
@@ -64,3 +64,11 @@ if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     runner.run(suite)
     print_results(STUDENTS)
+    # Print scripts source code to check
+    for s in SCRIPTS:
+        print("'", s, "'", sep='')
+    for s in SCRIPTS:
+        print('=' * 79)
+        print("'", s, "'", sep='')
+        with open(s, 'r') as f:
+            print(f.read())
