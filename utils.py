@@ -1,5 +1,7 @@
+from __future__ import print_function, unicode_literals, absolute_import
 import csv
 import re
+from operator import itemgetter
 
 
 def get_netid_from_dirname(dirname):
@@ -21,3 +23,9 @@ def build_students(filename, students):
                 if re.search('^[a-z]+[0-9]+$', row[0]):
                     netid = row[0]
                     students[netid] = -1
+
+
+def print_results(students):
+    for student, grade in sorted(students.items(), key=itemgetter(1)):
+        print(format(student, '11'), end=': ')
+        print(format(grade, '2'))

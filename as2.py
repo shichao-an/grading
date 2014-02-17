@@ -6,10 +6,9 @@ import sys
 if sys.version_info[0] < 3:
     raise Exception('Must use Python 3.')
 import os
-from operator import itemgetter
 import subprocess
 import unittest
-from utils import get_netid_from_dirname, build_students
+from utils import get_netid_from_dirname, build_students, print_results
 
 
 ASSIGNMENT_NAME = '../Input, format, print'  # Directory name
@@ -68,6 +67,4 @@ if __name__ == '__main__':
     suite.addTest(TestAssignment("test_results"))
     runner = unittest.TextTestRunner()
     runner.run(suite)
-    for student, grade in sorted(STUDENTS.items(), key=itemgetter(1)):
-        print(format(student, '11'), end=': ')
-        print(format(grade, '2'))
+    print_results(STUDENTS)
