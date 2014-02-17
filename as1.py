@@ -5,14 +5,14 @@ from __future__ import print_function, unicode_literals, absolute_import
 import sys
 if sys.version_info[0] < 3:
     raise Exception('Must use Python 3.')
-import csv
-import re
 import os
 from operator import itemgetter
 import subprocess
 import unittest
+from utils import get_netid_from_dirname, build_students
 
-ASSIGNMENT_NAME = 'Hello World!'  # Directory name
+
+ASSIGNMENT_NAME = '../Hello World!'  # Directory name
 GRADES_CSV = 'grades.csv'
 STUDENTS = {}
 FULL_MARK = 10
@@ -31,14 +31,7 @@ class TestAssignment(unittest.TestCase):
         # -1: not submitted
         # n: grade
         self.students = {}
-        with open(filename, 'r') as f:
-            reader = csv.reader(f)
-            data = list(reader)
-            for i, row in enumerate(data):
-                if len(row) > 0:
-                    if re.search('^[a-z]+[0-9]+$', row[0]):
-                        netid = row[0]
-                        self.students[netid] = -1
+        build_students(filename, self.students)
 
     def test_results(self):
         for dirpath, dirnames, filenames in os.walk(target):
@@ -64,12 +57,6 @@ class TestAssignment(unittest.TestCase):
     def tearDown(self):
         global STUDENTS
         STUDENTS = self.students
-
-
-def get_netid_from_dirname(dirname):
-    m = re.search('\(([a-z]+[0-9]+)\)', dirname)
-    if m:
-        return m.group(1)
 
 
 if __name__ == '__main__':
