@@ -63,8 +63,7 @@ class TestAssignment(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite()
-    suite.addTest(TestAssignment("test_results"))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestAssignment)
     runner = unittest.TextTestRunner()
     runner.run(suite)
     print_results(STUDENTS)
