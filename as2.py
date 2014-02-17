@@ -6,14 +6,18 @@ import sys
 if sys.version_info[0] < 3:
     raise Exception('Must use Python 3.')
 import os
+import scripttest
 import subprocess
 import unittest
-from utils import get_netid_from_dirname, build_students, print_results
+from utils import (get_netid_from_dirname, build_students, print_results,
+                   check_scripts)
 
 
 ASSIGNMENT_NAME = '../Input, format, print'  # Directory name
 GRADES_CSV = 'grades.csv'
 STUDENTS = {}
+GOOD_SCRIPTS = {}
+OUTPUTS = {}
 FULL_MARK = 10
 _d = os.path.join(os.path.dirname(__file__), ASSIGNMENT_NAME)
 target = os.path.abspath(_d)
@@ -42,12 +46,19 @@ class TestAssignment(unittest.TestCase):
                     self.students[netid] = 0
                     script = os.path.join(dirpath, filename)
                     try:
-                        popen = subprocess.Popen(['python3', script],
-                                                 stdin=subprocess.PIPE,
-                                                 stdout=subprocess.PIPE)
-                        _output, _ = popen.communicate(bytes('Andrew\n20\n',
-                                                             'utf-8'))
-                        output = _output.decode('utf-8')
+                        #popen = subprocess.Popen(['python3', script],
+                        #                         stdin=subprocess.PIPE,
+                        #                         stdout=subprocess.PIPE)
+                        #_output, _ = popen.communicate(bytes('Andrew\n20\n',
+                        #                                     'utf-8'))
+                        #output = _output.decode('utf-8')
+                        env = scripttest.TestFileEnvironment('./test-output',
+                                                             split_cmd=False)
+                        test_input = bytes('Andrew\n20\n', 'utf-8')
+                        res = env.run('python3', script, stdin=test_input)
+                        output = res.stdout
+                        OUTPUTS[netid] = output
+                        GOOD_SCRIPTS[netid] = script
                         try:
                             assert 'Andrew' in output
                             assert '40' in output
@@ -67,3 +78,7 @@ if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     runner.run(suite)
     print_results(STUDENTS)
+    check_scripts(GOOD_SCRIPTS)
+    for netid in OUTPUTS:
+        print('[netid]', netid)
+        print(OUTPUTS[netid])

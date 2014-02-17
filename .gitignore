@@ -1,3 +1,4 @@
 *.py[cod]
 *.swp
 .DS_Store
+test-output

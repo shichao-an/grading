@@ -29,3 +29,16 @@ def print_results(students):
     for student, grade in sorted(students.items(), key=itemgetter(1)):
         print(format(student, '11'), end=': ')
         print(format(grade, '2'))
+
+
+def check_scripts(scripts):
+    """
+    :param scripts: a dictionary mapping netid to script path
+    """
+    for netid in scripts:
+        print('=' * 80)
+        print('[netid]', netid)
+        print('[script]', "'", scripts[netid], "'", sep='')
+        print()
+        with open(scripts[netid], 'r') as f:
+            print(f.read())

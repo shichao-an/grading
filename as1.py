@@ -8,13 +8,14 @@ if sys.version_info[0] < 3:
 import os
 import subprocess
 import unittest
-from utils import get_netid_from_dirname, build_students, print_results
+from utils import (get_netid_from_dirname, build_students, print_results,
+                   check_scripts)
 
 
 ASSIGNMENT_NAME = '../Hello World!'  # Directory name
 GRADES_CSV = 'grades.csv'
 STUDENTS = {}
-SCRIPTS = []  # Scripts to check
+SCRIPTS = {}  # Scripts to check
 FULL_MARK = 10
 _d = os.path.join(os.path.dirname(__file__), ASSIGNMENT_NAME)
 target = os.path.abspath(_d)
@@ -49,7 +50,7 @@ class TestAssignment(unittest.TestCase):
                         assert 'world' in str.lower(output)
                         self.students[netid] = FULL_MARK
                     except Exception as e:
-                        SCRIPTS.append(script)
+                        SCRIPTS[netid] = script
                         print(netid)
                         print(e)
 
@@ -65,10 +66,4 @@ if __name__ == '__main__':
     runner.run(suite)
     print_results(STUDENTS)
     # Print scripts source code to check
-    for s in SCRIPTS:
-        print("'", s, "'", sep='')
-    for s in SCRIPTS:
-        print('=' * 79)
-        print("'", s, "'", sep='')
-        with open(s, 'r') as f:
-            print(f.read())
+    check_scripts(SCRIPTS)
