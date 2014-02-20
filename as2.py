@@ -46,21 +46,15 @@ class TestAssignment(unittest.TestCase):
                     self.students[netid] = 0
                     script = os.path.join(dirpath, filename)
                     try:
-                        #popen = subprocess.Popen(['python3', script],
-                        #                         stdin=subprocess.PIPE,
-                        #                         stdout=subprocess.PIPE)
-                        #_output, _ = popen.communicate(bytes('Andrew\n20\n',
-                        #                                     'utf-8'))
-                        #output = _output.decode('utf-8')
                         env = scripttest.TestFileEnvironment('./test-output',
                                                              split_cmd=False)
-                        test_input = bytes('Andrew\n20\n', 'utf-8')
+                        test_input = bytes('Longername\n20\n', 'utf-8')
                         res = env.run('python3', script, stdin=test_input)
                         output = res.stdout
                         OUTPUTS[netid] = output
                         GOOD_SCRIPTS[netid] = script
                         try:
-                            assert 'Andrew' in output
+                            assert 'Longername' in output
                             assert '40' in output
                             self.students[netid] = FULL_MARK
                         except AssertionError:
