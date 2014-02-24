@@ -7,7 +7,6 @@ if sys.version_info[0] < 3:
     raise Exception('Must use Python 3.')
 import os
 import scripttest
-import subprocess
 import unittest
 from utils import (get_netid_from_dirname, build_students, print_results,
                    check_scripts)
@@ -17,6 +16,7 @@ ASSIGNMENT_NAME = '../Input, format, print'  # Directory name
 GRADES_CSV = 'grades.csv'
 STUDENTS = {}
 GOOD_SCRIPTS = {}
+BAD_SCRIPTS = {}
 OUTPUTS = {}
 FULL_MARK = 10
 _d = os.path.join(os.path.dirname(__file__), ASSIGNMENT_NAME)
@@ -52,15 +52,16 @@ class TestAssignment(unittest.TestCase):
                         res = env.run('python3', script, stdin=test_input)
                         output = res.stdout
                         OUTPUTS[netid] = output
+                        assert 'Longername' in output
+                        assert '40' in output
+                        assert 'Justin' in output
+                        assert '19' in output
+                        self.students[netid] = FULL_MARK
                         GOOD_SCRIPTS[netid] = script
-                        try:
-                            assert 'Longername' in output
-                            assert '40' in output
-                            self.students[netid] = FULL_MARK
-                        except AssertionError:
-                            print(output)
-                    except subprocess.CalledProcessError:
-                        pass
+                    except:
+                        # AssertionError and other exception
+                        print(output)
+                        BAD_SCRIPTS[netid] = script
 
     def tearDown(self):
         global STUDENTS
@@ -73,6 +74,8 @@ if __name__ == '__main__':
     runner.run(suite)
     print_results(STUDENTS)
     check_scripts(GOOD_SCRIPTS)
-    for netid in OUTPUTS:
-        print('[netid]', netid)
-        print(OUTPUTS[netid])
+    #for netid in OUTPUTS:
+        #print('[netid]', netid)
+        #print(OUTPUTS[netid])
+    print('*' * 80)
+    check_scripts(BAD_SCRIPTS)
