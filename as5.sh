@@ -1,5 +1,5 @@
 #!/bin/bash
-# Inplace converted absolute or invalid relative file path
+# In-place convert absolute or invalid relative file path
 # Delete os.chdir lines
 
 
