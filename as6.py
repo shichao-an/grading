@@ -69,6 +69,8 @@ class TestAssignment(unittest.TestCase):
                     print('Passed Assert', passed_assert)
                     print(output)
                     print('*' * 79)
+                    print(netid)
+                    print("'", script, "'", sep='', end='\n')
                     pdb.set_trace()
 
     def tearDown(self):
